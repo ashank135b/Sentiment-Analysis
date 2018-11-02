@@ -10,6 +10,8 @@ from sklearn import metrics
 import warnings
 
 
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
 
 with open("train.csv", 'r') as file:
     data = list(csv.reader(file))

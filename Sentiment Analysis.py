@@ -4,6 +4,31 @@ import pickle
 import re
 from collections import Counter
 from nltk.corpus import stopwords
+from tweepy import Stream, OAuthHandler
+from tweepy.streaming import StreamListener
+import json
+
+
+ckey = "oDsiX6eniJnahPhC1bPLT8vLl"
+csecret = "MtIkFrsf8fQyrBmFMzdXAzjfICiSQTjt0cM53SD74jqFElVxRR"
+atoken = "982184984717885440-8Mb8l2cXaEe9H0oDeVrbOlRFrN85wuP"
+asecret = "7xNPhmOuNt94dQnYZkiq11XQBVhV1gtOjtumWeCXiNiki"
+
+
+class listener(StreamListener):
+
+    def on_data(self, data):
+        print(data)
+        return (True)
+
+    def on_error(self, status):
+        print(status)
+
+
+auth = OAuthHandler(ckey, csecret)
+auth.set_access_token(atoken, asecret)
+
+twitterStream = Stream(auth, listener())
 
 s = set(stopwords.words('english'))
 
