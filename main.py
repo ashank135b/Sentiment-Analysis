@@ -26,14 +26,16 @@ def update_graph_scatter():
     try:
         conn = sqlite3.connect('twitter.db')
         c = conn.cursor()
-        df = pd.read_sql("SELECT * FROM sentiment WHERE tweet LIKE '%olympic%' ORDER BY unix DESC LIMIT 1000", conn)
+        df = pd.read_sql("SELECT * FROM sentiment WHERE tweet LIKE '%yes%' ORDER BY unix DESC LIMIT 1000", conn)
         df.sort_values('unix', inplace=True)
         df['sentiment_smoothed'] = df['sentiment'].rolling(int(len(df)/5)).mean()
+        df['sentiment_smoothed'] = df['sentiment_smoothed'] / (df['sentiment_smoothed'].abs()).max())
         df.dropna(inplace=True)
 
         X = df.unix.values[-100:]
         Y = df.sentiment_smoothed.values[-100:]
-
+        print(X[0],'---------------')
+        print(Y[0])
         data = plotly.graph_objs.Scatter(
                 x=X,
                 y=Y,
