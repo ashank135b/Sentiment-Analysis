@@ -1,17 +1,11 @@
-import numpy as np
-import pandas as pd
 import pickle
 import csv
 import re
 from collections import Counter
-import nltk
 from nltk.corpus import stopwords
-from sklearn import metrics
 import warnings
 
-
-with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
+warnings.filterwarnings("ignore")
 
 with open("train.csv", 'r') as file:
     data = list(csv.reader(file))

@@ -1,5 +1,3 @@
-import numpy as np
-import pandas as pd
 import pickle
 import re
 from collections import Counter
@@ -26,23 +24,18 @@ neg_count, prob_neg, neg_data_count = neg_val[0], neg_val[1], neg_val[2]
 def make_class_prediction(text, counts, class_prob):
     prediction = 1
     text_count = Counter(re.split("\s+", text))
-    # print(text_count)
+    #print(text_count)
     for word in text_count:
         if word not in s and word.isalpha():
-            prediction *= text_count.get(word) * (counts.get(word, 0) + 1) / (sum(counts.values()))
+            prediction = prediction * text_count.get(word) * (counts.get(word, 0) + 1) / (sum(counts.values()))
     return prediction * class_prob
 
+#n = make_class_prediction("sad is bad", neg_count, prob_neg)
+#p = make_class_prediction("sad is bad", pos_count, prob_pos)
 
-print(make_class_prediction("happy", neg_count, prob_neg), make_class_prediction("happy", pos_count, prob_pos))
+#sum = n+p
 
-
-def predict(text):
-    neg_pred = make_class_prediction(text, neg_count, prob_neg)
-    pos_pred = make_class_prediction(text, pos_count, prob_pos)
-    if neg_pred > pos_pred:
-        return -1
-    else:
-        return 1
+#print(n/sum,p/sum)
 
 
 ckey = "oDsiX6eniJnahPhC1bPLT8vLl"
@@ -78,9 +71,9 @@ class listener(StreamListener):
             neg_sentiment = make_class_prediction(tweet, neg_count, prob_neg)
             pos_sentiment = make_class_prediction(tweet, pos_count, prob_pos)
             if pos_sentiment > neg_sentiment:
-                sentiment = pos_sentiment
+                sentiment = pos_sentiment/(neg_sentiment + pos_sentiment)
             else:
-                sentiment = -1*neg_sentiment
+                sentiment = -1*neg_sentiment/(neg_sentiment + pos_sentiment)
             print(time_ms, tweet, sentiment)
             c.execute("INSERT INTO sentiment (unix, tweet, sentiment) VALUES (?, ?, ?)",
                       (time_ms, tweet, sentiment))
