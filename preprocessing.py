@@ -7,7 +7,7 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-with open("train.csv", 'r') as file:
+with open("train.csv", 'r', encoding="ISO-8859-1") as file:
     data = list(csv.reader(file))
 del data[0]
 
@@ -23,8 +23,13 @@ positive_text = get_text(data, 1)
 
 
 def count_text(text):
+    text = re.sub('((www\.[^\s]+)|(https?://[^\s]+))', 'URL', text)
+    text = re.sub('@[^\s]+', 'USER', text)
+    text = text.lower().replace("ё", "е")
+    text = re.sub('[^a-zA-Zа-яА-Я1-9]+', ' ', text)
+    text = re.sub(' +', ' ', text)
     words = re.split("\s+", text)
-    words = [word for word in words if word not in s and word.isalpha()]
+    words = [word for word in words if word not in s and word != '']
     return Counter(words)
 
 
