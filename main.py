@@ -12,7 +12,7 @@ app = dash.Dash(__name__)
 app.layout = html.Div(
     [html.H1('Live Twitter Sentiment',style={'color': 'blue' ,'text-align': 'center'}),
      html.H2('Search:',style={'color': 'red'}),
-     dcc.Input(id='sentiment_term', value='olympic', type='text'),
+     dcc.Input(id='sentiment_term', value='intelligence', type='text'),
      dcc.Graph(id='live-graph', animate=True),
      dcc.Interval(
          id='graph-update',
@@ -49,6 +49,13 @@ def update_graph_scatter(sentiment_term):
         print(df['sentiment_smoothed'])
         df.to_csv("efabhvlek.csv")
 
+        sum_sentiment = df['sentiment_smoothed'].sum()
+        graph_color = ''
+        if(sum_sentiment < 0):
+            graph_color = "rgb(255,99,71)"
+        else:
+            graph_color = "rgb(144,238,144)"
+
         X = df.index
         Y = df.sentiment_smoothed.values
 
@@ -58,7 +65,9 @@ def update_graph_scatter(sentiment_term):
             name='Scatter',
             mode='lines',
             fill='tozeroy',
-        )
+            line=dict(
+                color=graph_color,)
+            )
 
         return {'data': [data],'layout': go.Layout(xaxis=dict(range=[min(X), max(X)]),
                                                     yaxis=dict(range=[min(Y), max(Y)]))}
