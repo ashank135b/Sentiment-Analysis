@@ -36,7 +36,7 @@ def update_graph_scatter(sentiment_term):
         df.sort_values('unix', inplace=True)
         df['sentiment_smoothed'] = df['sentiment'].rolling(int(len(df) / 5)).mean()
         df.dropna(inplace=True)
-        #print(df['sentiment_smoothed'])
+        print(df['sentiment_smoothed'])
         df.to_csv("efabhvlek.csv")
         X = df.unix.values[-100:]
         Y = df.sentiment_smoothed.values[-100:]
