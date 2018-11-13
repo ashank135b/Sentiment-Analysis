@@ -46,38 +46,16 @@ def update_graph_scatter(sentiment_term):
         X = df.unix.values[-100:]
         Y = df.sentiment_smoothed.values[-100:]
 
-        pos_x=[]
-        pos_y=[]
-        neg_x=[]
-        neg_y=[]
-        for i in range(X):
-            if Y[i]>0:
-                pos_x.append(X[i])
-                pos_y.append(Y[i])
-            else:
-                neg_x.append(X[i])
-                neg_y.append(Y[i])
-
-
-        trace1 = go.Scatter(
-            x=pos_x,
-            y=pos_y,
-            mode='lines+markers',
+        data = go.Scatter(
+            x=list(X),
+            y=list(Y),
+            name='Scatter',
+            mode='lines',
             fill='tozeroy',
-            fillcolor="green",
         )
 
-        trace2 = go.Scatter(
-            x=neg_x,
-            y=neg_y,
-            mode='lines+markers',
-            fill='tozeroy',
-            fillcolor="red",
-        )
-
-        data=[trace1,trace2]
-        return {'data': [data], 'layout': go.Layout(xaxis=dict(range=[min(X), max(X)]),
-                                                    yaxis=dict(range=[min(Y), max(Y)]), )}
+        return {'data': [data],'layout': go.Layout(xaxis=dict(range=[min(X), max(X)]),
+                                                    yaxis=dict(range=[min(Y), max(Y)]))}
 
     except Exception as e:
         with open('errors.txt', 'a') as f:
