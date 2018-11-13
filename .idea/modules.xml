@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/AIProject.iml" filepath="$PROJECT_DIR$/.idea/AIProject.iml" />
+      <module fileurl="file://$USER_HOME$/Downloads/Sentiment-Analysis-master/.idea/AIProject.iml" filepath="$USER_HOME$/Downloads/Sentiment-Analysis-master/.idea/AIProject.iml" />
     </modules>
   </component>
 </project>
