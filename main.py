@@ -47,7 +47,7 @@ def update_graph_scatter(sentiment_term):
         #df = df.resample('1min').mean()
 
         print(df['sentiment_smoothed'])
-        df.to_csv("efabhvlek.csv")
+        df.to_csv("searched_tweets.csv")
 
         sum_sentiment = df['sentiment_smoothed'].sum()
         graph_color = ''
