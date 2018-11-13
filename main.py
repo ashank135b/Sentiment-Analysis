@@ -6,10 +6,12 @@ import plotly
 import plotly.graph_objs as go
 import sqlite3
 import pandas as pd
+import numpy as np
 
 app = dash.Dash(__name__)
 app.layout = html.Div(
-    [html.H2('Live Twitter Sentiment'),
+    [html.H1('Live Twitter Sentiment',style={'color': 'blue' ,'text-align': 'center'}),
+     html.H2('Search:',style={'color': 'red'}),
      dcc.Input(id='sentiment_term', value='olympic', type='text'),
      dcc.Graph(id='live-graph', animate=True),
      dcc.Interval(
@@ -23,6 +25,7 @@ app.layout = html.Div(
 @app.callback(Output('live-graph', 'figure'),
               [Input(component_id='sentiment_term', component_property='value')],
               events=[Event('graph-update', 'interval')])
+
 def update_graph_scatter(sentiment_term):
     try:
         conn = sqlite3.connect('twitter.db')
@@ -38,16 +41,41 @@ def update_graph_scatter(sentiment_term):
         df.dropna(inplace=True)
         print(df['sentiment_smoothed'])
         df.to_csv("efabhvlek.csv")
+
+
         X = df.unix.values[-100:]
         Y = df.sentiment_smoothed.values[-100:]
 
-        data = plotly.graph_objs.Scatter(
-            x=X,
-            y=Y,
-            name='Scatter',
-            mode='lines+markers'
+        pos_x=[]
+        pos_y=[]
+        neg_x=[]
+        neg_y=[]
+        for i in range(X):
+            if Y[i]>0:
+                pos_x.append(X[i])
+                pos_y.append(Y[i])
+            else:
+                neg_x.append(X[i])
+                neg_y.append(Y[i])
+
+
+        trace1 = go.Scatter(
+            x=pos_x,
+            y=pos_y,
+            mode='lines+markers',
+            fill='tozeroy',
+            fillcolor="green",
         )
 
+        trace2 = go.Scatter(
+            x=neg_x,
+            y=neg_y,
+            mode='lines+markers',
+            fill='tozeroy',
+            fillcolor="red",
+        )
+
+        data=[trace1,trace2]
         return {'data': [data], 'layout': go.Layout(xaxis=dict(range=[min(X), max(X)]),
                                                     yaxis=dict(range=[min(Y), max(Y)]), )}
 
