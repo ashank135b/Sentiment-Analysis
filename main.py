@@ -27,11 +27,16 @@ def update_graph_scatter(sentiment_term):
     try:
         conn = sqlite3.connect('twitter.db')
         c = conn.cursor()
-        df = pd.read_sql("SELECT * FROM sentiment WHERE tweet LIKE ? ORDER BY unix DESC LIMIT 1000", conn ,params=('%' + sentiment_term + '%',))
+        words = sentiment_term.split(' ')
+        print(words)
+        frames = []
+        for i in range(len(words)):
+            frames.append(pd.read_sql("SELECT * FROM sentiment WHERE tweet LIKE ? ORDER BY unix DESC LIMIT 1000", conn ,params=('%' + words[i] + '%',)))
+        df = pd.concat(frames)
         df.sort_values('unix', inplace=True)
         df['sentiment_smoothed'] = df['sentiment'].rolling(int(len(df) / 5)).mean()
         df.dropna(inplace=True)
-        print(df['sentiment_smoothed'])
+        #print(df['sentiment_smoothed'])
         df.to_csv("efabhvlek.csv")
         X = df.unix.values[-100:]
         Y = df.sentiment_smoothed.values[-100:]
